@@ -1,0 +1,116 @@
+1. SOLID Principles
+_________________________
+
+These five principles guide object-oriented design and help developers avoid design pitfalls. Let’s break them down:
+
+                              
+                              S - Single Responsibility Principle (SRP)
+                              ________________________________________________
+
+Definition:
+A class should have only one reason to change, meaning it should only have one job or responsibility.
+
+Explanation:
+Each class should focus on a single part of the functionality provided by the software and encapsulate it. 
+If a class has more than one responsibility, changes to one responsibility might break functionality related to the other.
+
+Example:
+Imagine a User class responsible for both user authentication and user profile updates. The responsibilities here are mixed. Instead, you could split it into:
+
+AuthService for authentication
+UserProfile for user data
+
+
+// Here, the User class is responsible for two different tasks: authentication and profile updates, which is a violation of the Single Responsibility Principle.
+
+          class User {
+            private username: string;
+            private password: string;
+            private email: string;
+          
+            constructor(username: string, password: string, email: string) {
+              this.username = username;
+              this.password = password;
+              this.email = email;
+            }
+          
+            // Authentication responsibility
+            authenticate(inputPassword: string): boolean {
+              return this.password === inputPassword;
+            }
+          
+            // Profile update responsibility
+            updateProfile(newEmail: string): void {
+              this.email = newEmail;
+              console.log(`Profile updated: new email is ${this.email}`);
+            }
+          }
+
+We split the responsibilities into two separate classes: AuthService for handling authentication and UserProfile for managing user profile updates.
+
+// AuthService (Authentication Responsibility)
+
+        class AuthService {
+          private username: string;
+          private password: string;
+        
+          constructor(username: string, password: string) {
+            this.username = username;
+            this.password = password;
+          }
+        
+          authenticate(inputPassword: string): boolean {
+            return this.password === inputPassword;
+          }
+        }
+
+// UserProfile (Profile Management Responsibility)
+
+      class UserProfile {
+        private email: string;
+      
+        constructor(email: string) {
+          this.email = email;
+        }
+      
+        updateProfile(newEmail: string): void {
+          this.email = newEmail;
+          console.log(`Profile updated: new email is ${this.email}`);
+        }
+      
+        getEmail(): string {
+          return this.email;
+        }
+      }
+
+// Usage Example:
+Now, we can use these classes separately, ensuring each class has only one responsibility:
+
+      // Instantiate AuthService for authentication
+      const authService = new AuthService("johnDoe", "password123");
+      
+      // Authenticate user
+      const isAuthenticated = authService.authenticate("password123");
+      console.log(`User authenticated: ${isAuthenticated}`); // Output: User authenticated: true
+      
+      // Instantiate UserProfile for profile updates
+      const userProfile = new UserProfile("john@example.com");
+      
+      // Update profile
+      userProfile.updateProfile("john.new@example.com");
+
+
+                                                                          O - Open/Closed Principle (OCP)
+                                                                        ______________________________________
+
+Definition:
+A class should be open for extension but closed for modification.
+
+Explanation:
+Once a class is written and tested, it should not need modification for new features. Instead, you can extend its functionality via inheritance, interfaces, or composition.
+
+Example:
+Suppose you have a Shape class with a draw() method that supports circles. Instead of modifying this class to support rectangles, you extend it:
+
+Circle extends Shape
+Rectangle extends Shape
